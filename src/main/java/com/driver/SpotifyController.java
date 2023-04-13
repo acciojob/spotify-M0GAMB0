@@ -40,15 +40,15 @@ public class SpotifyController {
         spotifyService.createSong(title, albumName, length);
         return "Success";
     }
-//
-//    @PostMapping("/add-playlist-on-length")
-//    public String createPlaylistOnLength(String mobile, String title, int length) throws Exception{
-//        //Create a playlist with given title and add all songs having the given length in the database to that playlist
-//        //The creater of the playlist will be the given user and will also be the only listener at the time of playlist creation
-//        //If the user does not exist, throw "User does not exist" exception
-//
-//        return "Success";
-//    }
+
+    @PostMapping("/add-playlist-on-length")
+    public String createPlaylistOnLength(String mobile, String title, int length) throws Exception{
+        //Create a playlist with given title and add all songs having the given length in the database to that playlist
+        //The creater of the playlist will be the given user and will also be the only listener at the time of playlist creation
+        //If the user does not exist, throw "User does not exist" exception
+
+        return "Success";
+    }
 //
 //    @PostMapping("/add-playlist-on-name")
 //    public String createPlaylistOnName(String mobile, String title, List<String> songTitles) throws Exception{

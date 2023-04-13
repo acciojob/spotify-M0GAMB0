@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class SpotifyRepository {
-    public HashMap<Artist, List<Album>> artistAlbumMap;
-    public HashMap<Album, List<Song>> albumSongMap;
-    public HashMap<Playlist, List<Song>> playlistSongMap;
-    public HashMap<Playlist, List<User>> playlistListenerMap;
-    public HashMap<User, Playlist> creatorPlaylistMap;
+    public HashMap<Artist, List<Album>> artistAlbumMap;//created
+    public HashMap<Album, List<Song>> albumSongMap;//created
+    public HashMap<Playlist, List<Song>> playlistSongMap;//created
+    public HashMap<Playlist, List<User>> playlistListenerMap;//
+    public HashMap<User, Playlist> creatorPlaylistMap;//created
     public HashMap<User, List<Playlist>> userPlaylistMap;
     public HashMap<Song, List<User>> songLikeMap;
 
@@ -69,9 +69,7 @@ public class SpotifyRepository {
         for (Artist artst : artistAlbumMap.keySet()) {
             if (artst.getName().equals(artistName)) {
                 artistExists = true;
-                albumList = artistAlbumMap.get(artst);
-                albumList.add(album);
-                artistAlbumMap.put(artst, albumList);
+                artistAlbumMap.get(artst).add(album);
                 break;
             }
         }
@@ -80,34 +78,28 @@ public class SpotifyRepository {
             albumList.add(album);
             artistAlbumMap.put(artist, albumList);
         }
-        System.out.println(artistAlbumMap);
-        System.out.println(albums);
         return album;
     }
 
     public Song createSong(String title, String albumName, int length) throws Exception {
-        boolean albumExists = false;
         Album album = null;
         for (Album alboom : albums) {
             if (alboom.getTitle().equals(albumName)) {
-                albumExists = true;
                 album = alboom;
                 break;
             }
         }
-        if (!albumExists) {
+        if (album == null) {
             throw new Exception("Album does not exist");
         }
         Song song = new Song(title, length);
         songs.add(song);
-        albumExists = false;
+        boolean albumExists = false;
         List<Song> songList;
         for (Album alboom : albumSongMap.keySet()) {
             if (alboom.getTitle().equals(albumName)) {
                 albumExists = true;
-                songList = albumSongMap.get(alboom);
-                songList.add(song);
-                albumSongMap.put(alboom, songList);
+                albumSongMap.get(alboom).add(song);
                 break;
             }
         }
@@ -116,12 +108,34 @@ public class SpotifyRepository {
             songList.add(song);
             albumSongMap.put(album, songList);
         }
-        System.out.println(albumSongMap);
         return song;
     }
 
     public Playlist createPlaylistOnLength(String mobile, String title, int length) throws Exception {
-
+        User currUser = null;
+        for (User user : users) {
+            if (user.getMobile().equals(mobile)) {
+                currUser = user;
+                break;
+            }
+        }
+        if (currUser == null) {
+            throw new Exception("User does not exist");
+        }
+        Playlist playlist = new Playlist(title);
+        playlists.add(playlist);
+        List<Song> sameLengthSongs = new ArrayList<>();
+        for (Song song : songs) {
+            if (song.getLength() == length) {
+                sameLengthSongs.add(song);
+            }
+        }
+        playlistSongMap.put(playlist,sameLengthSongs);
+        creatorPlaylistMap.put(currUser,playlist);
+        List<User> userList=new ArrayList<>();
+        userList.add(currUser);
+        playlistListenerMap.put(playlist,userList);
+        return playlist;
     }
 
 //    public Playlist createPlaylistOnName(String mobile, String title, List<String> songTitles) throws Exception {
